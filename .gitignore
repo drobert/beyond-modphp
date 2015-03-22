@@ -31,4 +31,4 @@
 /phpunit.xml
 
 # Composer PHAR
-/composer.phar
+#/composer.phar

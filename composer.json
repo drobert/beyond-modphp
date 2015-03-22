@@ -1,0 +1,14 @@
+{
+  "name": "beyondmodphp/web",
+  "description": "simple mod_php based traditional site and code base",
+  "version": "1.0.0-dev",
+  "require": {
+    "silex/silex": "~1.2",
+    "monolog/monolog": "~1.13"
+  },
+  "autoload": {
+    "psr-4": {
+      "BeyondModPhp\\": "src/lib"
+    }
+  }
+}
