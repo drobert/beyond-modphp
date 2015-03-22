@@ -34,18 +34,20 @@ simply demonstrate utilizing a reactphp-based logging daemon for php.
 ## Getting Started
 
 Install: 
-> `php ./composer.phar install`
+> php ./composer.phar install
 
 Running:
->  `cd web`
->  `php -S localhost:8000`
+```
+cd web
+php -S localhost:8000
+```
 
 ### URLs:
 
 To load a user by name from the default web server on port 8000:
->  `http://localhost:8000/hello/USERNAME`
+> http://localhost:8000/hello/USERNAME
 
 e.g.
 
->  `http://localhost:8000/hello/bill`
+>  http://localhost:8000/hello/bill
 
