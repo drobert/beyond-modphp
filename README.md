@@ -44,6 +44,8 @@ Running:
 
 To load a user by name from the default web server on port 8000:
 >  `http://localhost:8000/hello/USERNAME`
+
 e.g.
+
 >  `http://localhost:8000/hello/bill`
 
