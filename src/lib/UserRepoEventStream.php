@@ -19,7 +19,16 @@ class UserRepoEventStream extends UserRepoWrapper {
         $start = microtime(true);
         $retval = parent::loadByName($name);
         $total = microtime(true) - $start;
-        $this->logger->info("$name\t$total"); // event, name and load time
+
+        $msg = sprintf("$name\t%.6f usec", $total);
+
+        // to illustrate multipart zmq multipart message routing, names shorter
+        // than 4 characters are ERRORs, others are INFOs
+        if (strlen($name) >= 3) {
+            $this->logger->info($msg);
+        } else {
+            $this->logger->error($msg);
+        }
         return $retval;
     }
 }

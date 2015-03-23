@@ -33,6 +33,11 @@ simply demonstrate utilizing a reactphp-based logging daemon for php.
 
 ## Getting Started
 
+### Requirements
+
+A PHP 5.4+ installation, with:
+* zmq support (http://zeromq.org/bindings:php)
+
 Install: 
 > php ./composer.phar install
 

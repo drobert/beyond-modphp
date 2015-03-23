@@ -1,7 +1,7 @@
 <?php
 // vim: set et ts=4 sw=4 sts=4 ai cindent:
 // web/index.php
-require_once __DIR__.'/../../vendor/autoload.php';
+require_once __DIR__.'/../../../vendor/autoload.php';
 
 use Monolog\Logger;
 use Monolog\Handler\ErrorLogHandler;
