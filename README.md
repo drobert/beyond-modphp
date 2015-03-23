@@ -59,6 +59,7 @@ e.g.
 ```
 cd src/web/std
 php -S localhost:8000
+```
 
 ### Logging via zmq/reactphp
 
