@@ -20,7 +20,7 @@ class UserRepoEventStream extends UserRepoWrapper {
         $retval = parent::loadByName($name);
         $total = microtime(true) - $start;
 
-        $msg = sprintf("$name\t%.6f usec", $total);
+        $msg = sprintf("$name\t%.6f msec", $total*1000);
 
         // to illustrate multipart zmq multipart message routing, names shorter
         // than 4 characters are ERRORs, others are INFOs

@@ -17,23 +17,21 @@ use BeyondModPhp\Monolog\ReactStreamHandler;
 
 $loop = React\EventLoop\Factory::create();
 
-//$formatter = new LineFormatter("%datetime%\t%message%", "c");
+$formatter = new LineFormatter("%message%\n");
 
 $logger = new Logger('All');
-//$allEventsLog = new StreamHandler(__DIR__.'/logs/app_logger_all.log', Logger::DEBUG);
 $allEventsHandler = new ReactStreamHandler(new React\Stream\Stream(fopen(__DIR__.'/logs/app_logger_all.log', 'a'), $loop), Logger::DEBUG);
-//$allEventsLog->setFormatter($formatter);
+$allEventsHandler->setFormatter($formatter);
 $shortEventsHandler = new ReactStreamHandler(new React\Stream\Stream(fopen(__DIR__.'/logs/app_logger_short.log', 'a'), $loop), Logger::ERROR, false);
-//$shortEventsLog->setFormatter($formatter);
-
-//$errorHandler = new ErrorLogHandler(ErrorLogHandler::OPERATING_SYSTEM, Logger::ERROR);
+$shortEventsHandler->setFormatter($formatter);
 $errorHandler = new ReactStreamHandler(new React\Stream\Stream(fopen(__DIR__.'/logs/errors.log', 'a'), $loop), Logger::ERROR, false);
-$errors = new Logger('Errors');
-$errors->pushHandler($errorHandler);
 
 $logger->pushHandler($errorHandler);
-$logger->pushHandler($allEventsHandler);
 $logger->pushHandler($shortEventsHandler);
+$logger->pushHandler($allEventsHandler);
+
+$errors = new Logger('Errors');
+$errors->pushHandler($errorHandler);
 
 // the app
 
@@ -41,7 +39,6 @@ $zmqContext = new React\ZMQ\Context($loop);
 
 $zmqPull = $zmqContext->getSocket(\ZMQ::SOCKET_PULL);
 $zmqPull->bind('tcp://127.0.0.1:5555');
-//$zmqPull->bind('ipc:///tmp/beyond-modphp.ipc');
 $zmqPull->on('error', function($e) use ($errors) {
     $errors->error(print_r($e, true));
 });

@@ -35,3 +35,6 @@
 
 # Text Editor Stuff
 *.swp
+
+# Other Logs
+*.log

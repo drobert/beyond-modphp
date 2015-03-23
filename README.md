@@ -41,11 +41,7 @@ A PHP 5.4+ installation, with:
 Install: 
 > php ./composer.phar install
 
-Running:
-```
-cd web
-php -S localhost:8000
-```
+``
 
 ### URLs:
 
@@ -55,4 +51,30 @@ To load a user by name from the default web server on port 8000:
 e.g.
 
 >  http://localhost:8000/hello/bill
+
+## Running:
+
+### Stand-alone, classic mod_php style app
+
+```
+cd src/web/std
+php -S localhost:8000
+
+### Logging via zmq/reactphp
+
+Note, startup order is _not_ important.
+In two separate terminals:
+
+```
+mkdir src/web/react/logs
+php src/web/react/app_logger.php
+```
+
+```
+cd src/web/zmqlog
+php -S localhost:8000
+```
+
+In this application, any name shorter than three characters will be logged to src/web/react/logs/app_logger_short.log
+All requests will be logged to src/web/react/logs/app_logger_all.log
 

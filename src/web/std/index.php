@@ -24,7 +24,7 @@ $app['repo.user'] = $app->share(function($app) {
     
     $eventLogger = new Logger('User.Event');
     $eventHandler = new ErrorLogHandler();
-    $eventHandler->setFormatter(new LineFormatter("%datetime%\t%message%", "c"));
+    $eventHandler->setFormatter(new LineFormatter("%datetime%\t%channel%\t%message%", "c"));
     $eventLogger->pushHandler($eventHandler);
 
     return new UserRepoEventStream($main, $eventLogger);

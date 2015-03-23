@@ -23,9 +23,9 @@ class UserRepoMockDelays implements UserRepo {
 
     public function loadByName($name) {
         $delay = rand($this->boundMin,$this->boundMax);
-        $this->logger->info('Delaying user load', array('user', $name, 'delay (msec)', $delay/1000));
+        $this->logger->debug('Delaying user load', array('user', $name, 'delay', $delay));
         usleep($delay);
-        $this->logger->info('User loading complete', array('user', $name));
+        $this->logger->debug('User loading complete', array('user', $name));
         return $name;
     }
 }

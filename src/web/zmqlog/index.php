@@ -5,11 +5,11 @@ require_once __DIR__.'/../../../vendor/autoload.php';
 
 use Monolog\Logger;
 use Monolog\Formatter\LineFormatter;
+use Monolog\Handler\ErrorLogHandler;
 use BeyondModPhp\UserRepo;
 use BeyondModPhp\UserRepoMockDelays;
 use BeyondModPhp\UserRepoEcho;
 use BeyondModPhp\UserRepoEventStream;
-//use BeyondModPhp\Monolog\ZMQHandler;
 use Websoftwares\Monolog\Handler\ZMQHandler;
 
 $app = new Silex\Application();
@@ -19,27 +19,29 @@ $app['zmq'] = $app->share(function() {
     // 'PUB' is pub/sub for all listeners
     // 'PUSH' is winds up with a single listener
     $publisher = new \ZMQSocket($context, \ZMQ::SOCKET_PUSH);
-    $publisher->connect('tcp://127.0.0.1:5555');
+    // cannot seem to get 'ipc://' to work with zmq in php; various SO posts seem to agree
     //$publisher->connect('ipc:///tmp/beyond-modphp.ipc');
+    // Note: 'connect' is for pushers/publishers, 'bind' for pullers/subscribers
+    $publisher->connect('tcp://127.0.0.1:5555');
     return $publisher;
 });
 
-$app['logger'] = $app->share(function($app) {
-    // see: https://github.com/websoftwares/MonologZMQHandler
-    //$handler = new ZMQHandler($app['zmq'], \ZMQ::MODE_DONTWAIT, true);
-    //$handler = new ZMQHandler($app['zmq'], \ZMQ::MODE_SNDMORE, true);
-    $handler = new ZMQHandler($app['zmq']);
-    $logger = new Logger('Main');
-    $logger->pushHandler($handler);
+$app['logger'] = $app->share(function() {
+    $logger = new Logger('app.logger');
+    $logger->pushHandler(new ErrorLogHandler(ErrorLogHandler::OPERATING_SYSTEM, Logger::ERROR));
     return $logger;
 });
 
-//$app['delays.user.min.usec'] = 50000;
-//$app['delays.user.max.usec'] = 100000;
+$app['delays.user.min.usec'] = 50000;
+$app['delays.user.max.usec'] = 100000;
 $app['repo.user'] = $app->share(function($app) {
-    //$main = new UserRepoMockDelays($app['delays.user.min.usec'], $app['delays.user.max.usec'], $app['logger']);
-    
-    return new UserRepoEventStream(UserRepoEcho::getInstance(), $app['logger']);
+    $main = new UserRepoMockDelays($app['delays.user.min.usec'], $app['delays.user.max.usec'], $app['logger']);
+
+    $handler = new ZMQHandler($app['zmq']);
+    $logger = new Logger('Main');
+    $logger->pushHandler($handler);
+   
+    return new UserRepoEventStream($main, $logger);
 });
 
 $app->get('/hello/{name}', function ($name) use ($app) {
@@ -49,4 +51,5 @@ $app->get('/hello/{name}', function ($name) use ($app) {
 $app->run();
 
 //$app['zmq']->disconnect('ipc:///tmp/beyond-modphp.ipc');
+// unclear if this is necessary
 $app['zmq']->disconnect('tcp://127.0.0.1:5555');
